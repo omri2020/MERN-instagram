@@ -1,0 +1,117 @@
+[
+    {
+        "_id": "6533e24ceabd297309903154",
+        "name": "John Doe",
+        "email": "john@john.io",
+        "password": "pass1234",
+        "photo": "user-1.jpg",
+        "username": "john",
+        "posts": [
+            "6533e76da624b3dad6495326",
+            "6533e76da624b3dad6495329"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903155",
+        "name": "Jane Doe",
+        "email": "jane@jane.io",
+        "password": "pass1234",
+        "photo": "user-2.jpg",
+        "username": "jane",
+        "posts": [
+            "6533e76da624b3dad6495327"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903156",
+        "name": "Jack Doe",
+        "email": "jack@jack.io",
+        "password": "pass1234",
+        "photo": "user-3.jpg",
+        "username": "jack",
+        "posts": [
+            "6533e76da624b3dad6495328"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903157",
+        "name": "Jill Doe",
+        "email": "jill@jill.io",
+        "password": "pass1234",
+        "photo": "user-4.jpg",
+        "username": "jill",
+        "posts": ["6533e76da624b3dad6495330", "6533e76da624b3dad6495332", "6533e76da624b3dad6495333"]
+    },
+    {
+        "_id": "6533e24ceabd297309903158",
+        "name": "James Doe",
+        "email": "james@james.io",
+        "password": "pass1234",
+        "photo": "user-5.jpg",
+        "username": "james",
+        "posts": [
+            "6533e76da624b3dad6495334",
+            "6533e76da624b3dad6495335",
+            "6533e76da624b3dad6495336",
+            "6533e76da624b3dad6495337"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903159",
+        "name": "Jenny Doe",
+        "email": "jenny@jenny.io",
+        "password": "pass1234",
+        "photo": "user-6.jpg",
+        "username": "jenny",
+        "posts": [
+            "6533e76da624b3dad6495338"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903160",
+        "name": "Jesse Doe",
+        "email": "jesse@jesse.io",
+        "password": "pass1234",
+        "photo": "user-7.jpg",
+        "username": "jesse",
+        "posts": [
+            "6533e76da624b3dad6495339"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903161",
+        "name": "Jared Doe",
+        "email": "jared@jared.io",
+        "username": "jared",
+        "password": "pass1234",
+        "photo": "user-8.jpg",
+        "posts": [
+            "6533e76da624b3dad6495340",
+            "6533e76da624b3dad6495341",
+            "6533e76da624b3dad6495342"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903162",
+        "name": "Jasmine Doe",
+        "email": "jasmine@jasmine.io",
+        "password": "pass1234",
+        "photo": "user-9.jpg",
+        "username": "jasmine",
+        "posts": [
+            "6533e76da624b3dad6495343",
+            "6533e76da624b3dad6495344"
+        ]
+    },
+    {
+        "_id": "6533e24ceabd297309903163",
+        "name": "Jasper Doe",
+        "email": "jasper@jasper.io",
+        "password": "pass1234",
+        "photo": "user-10.jpg",
+        "username": "jasper",
+        "posts": [
+            "6533e76da624b3dad6495345"
+        ]
+    }
+]

@@ -1,0 +1,135 @@
+[
+    {
+        "_id": "6533e76da624b3dad6495326",
+        "caption": "This is a beautiful sunset",
+        "location": "Los Angeles",
+        "user": "6533e24ceabd297309903154",
+        "photo": "user-1.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495327",
+        "caption": "I love this city",
+        "location": "New York",
+        "user": "6533e24ceabd297309903155",
+        "photo": "user-2.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495328",
+        "caption": "My favorite place to relax",
+        "location": "Hawaii",
+        "user": "6533e24ceabd297309903156",
+        "photo": "user-3.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495329",
+        "caption": "Exploring the great outdoors",
+        "location": "Yellowstone National Park",
+        "user": "6533e24ceabd297309903154",
+        "photo": "user-4.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495330",
+        "caption": "Feeling the sand between my toes",
+        "location": "Miami Beach",
+        "user": "6533e24ceabd297309903157",
+        "photo": "user-5.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495332",
+        "caption": "A day at the amusement park",
+        "location": "Disney World",
+        "user": "6533e24ceabd297309903157",
+        "photo": "user-7.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495333",
+        "caption": "The city that never sleeps",
+        "location": "Las Vegas",
+        "user": "6533e24ceabd297309903157",
+        "photo": "user-8.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495334",
+        "caption": "A peaceful walk in the park",
+        "location": "Central Park",
+        "user": "6533e24ceabd297309903158",
+        "photo": "user-9.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495335",
+        "caption": "A beautiful day for a bike ride",
+        "location": "San Francisco",
+        "user": "6533e24ceabd297309903158",
+        "photo": "user-10.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495336",
+        "caption": "The perfect spot for a picnic",
+        "location": "Napa Valley",
+        "user": "6533e24ceabd297309903158",
+        "photo": "user-11.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495337",
+        "caption": "A day at the beach",
+        "location": "Malibu",
+        "user": "6533e24ceabd297309903158",
+        "photo": "user-12.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495338",
+        "caption": "A night out on the town",
+        "location": "New Orleans",
+        "user": "6533e24ceabd297309903159",
+        "photo": "user-13.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495339",
+        "caption": "A day at the museum",
+        "location": "Washington D.C.",
+        "user": "6533e24ceabd297309903160",
+        "photo": "user-14.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495340",
+        "caption": "A day at the zoo",
+        "location": "San Diego",
+        "user": "6533e24ceabd297309903161",
+        "photo": "user-15.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495341",
+        "caption": "A day at the aquarium",
+        "location": "Atlanta",
+        "user": "6533e24ceabd297309903161",
+        "photo": "user-16.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495342",
+        "caption": "A day at the park",
+        "location": "Chicago",
+        "user": "6533e24ceabd297309903161",
+        "photo": "user-17.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495343",
+        "caption": "A day at the fair",
+        "location": "Texas State Fair",
+        "user": "6533e24ceabd297309903162",
+        "photo": "user-18.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495344",
+        "caption": "A day at the beach",
+        "location": "Santa Monica",
+        "user": "6533e24ceabd297309903162",
+        "photo": "user-19.jpg"
+    },
+    {
+        "_id": "6533e76da624b3dad6495345",
+        "caption": "A day at the park",
+        "location": "Central Park",
+        "user": "6533e24ceabd297309903163",
+        "photo": "user-20.jpg"
+    }
+]
