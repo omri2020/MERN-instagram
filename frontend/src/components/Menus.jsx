@@ -1,20 +1,25 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useOutsideClick } from "../hooks/useOutsideClick";
-import Icon from "../components/Icon";
+import { twMerge } from "tailwind-merge";
+import Icon from "./Icon";
 
 const MenuContext = createContext();
 
-const MenuButton = ({ src, text }) => {
+const MenuButton = ({ src, text, iconStyles, className }) => {
   const { setOpenMenu, buttonRef } = useContext(MenuContext);
+  const buttonStyles = twMerge(
+    "relative flex w-full cursor-pointer items-center rounded-md p-3 transition-all",
+    className,
+  );
   return (
     <div
       ref={buttonRef}
-      className="relative flex w-full cursor-pointer items-center rounded-md p-3 transition-all hover:bg-gray-100 [&_img]:hover:scale-110"
+      className={buttonStyles}
       onClick={() => setOpenMenu((prev) => !prev)}
     >
-      <Icon src={src} height={6} />
-      <div className="pl-4">{text}</div>
+      <Icon src={src} className={iconStyles} />
+      {text && <div className="pl-4">{text}</div>}
     </div>
   );
 };

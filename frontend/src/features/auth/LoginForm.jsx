@@ -1,20 +1,17 @@
+import { useLogin } from "./useLogin";
 import { useForm } from "react-hook-form";
-import useAuth from "../auth/useAuth";
 import Button from "../../components/Button";
-import { determineInputType } from "../../utils/determineInputType";
 import PageLoader from "../../ui/PageLoader";
-import { useNavigate } from "react-router-dom";
+import { determineInputType } from "../../utils/determineInputType";
 
 function LoginForm() {
-  const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const { loginUser, isLoginLoading, loginError, authCheckLoading } = useAuth();
+  const { loginUser, isLoginLoading, loginError } = useLogin();
 
   const onSubmit = (data) => {
     const inputType = determineInputType(data.email);
@@ -26,10 +23,9 @@ function LoginForm() {
       delete finalData.email;
     }
     loginUser(finalData);
-    navigate("/");
   };
 
-  if (isLoginLoading || authCheckLoading) return <PageLoader />;
+  if (isLoginLoading) return <PageLoader />;
 
   return (
     <form

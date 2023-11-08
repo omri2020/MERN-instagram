@@ -13,11 +13,11 @@ function DiscardButton({
     <>
       {stepCount === 0 ? (
         <Modal.Button opens="discard">
-          <Icon src="discard-icon" height={6} />
+          <Icon src="discard-icon.png" height={6} />
         </Modal.Button>
       ) : (
         <button onClick={() => setStepCount((p) => p - 1)}>
-          <Icon src="discard-icon" height={6} />
+          <Icon src="discard-icon.png" height={6} />
         </button>
       )}
       <Modal.Window name="discard" className="w-3/12">

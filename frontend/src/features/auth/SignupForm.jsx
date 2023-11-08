@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import useAuth from "../auth/useAuth";
+import { useSignUp } from "../../features/auth/useSignUp";
 
 function SignupForm() {
   const {
@@ -8,7 +8,7 @@ function SignupForm() {
     formState: { errors },
     setError,
   } = useForm();
-  const { signupUser, isLoading: isRegistering } = useAuth();
+  const { signupUser, isSignupLoading } = useSignUp();
 
   const onSubmit = async (data) => {
     try {
@@ -39,7 +39,7 @@ function SignupForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="mb-3 flex w-full flex-col gap-3"
     >
-      {isRegistering && <p>Loading...</p>}
+      {isSignupLoading && <p>Loading...</p>}
       <div className="flex flex-col gap-2">
         <input
           placeholder="Mobile Number or Email"

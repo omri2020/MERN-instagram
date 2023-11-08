@@ -1,9 +1,9 @@
+import { useUserActions } from "./useUserActions";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
-import { useUserActions } from "./useUserActions";
 import UserMenu from "./UserMenu";
 
-function FollowingButton({ photo, username, followed, isUser }) {
+function FollowingButton({ photo, username, followed, isUser, userId }) {
   const { followUser, unfollow, isLoading } = useUserActions();
 
   return followed ? (
@@ -20,14 +20,25 @@ function FollowingButton({ photo, username, followed, isUser }) {
       </Modal.Button>
 
       <Modal.Window className="relative w-[25rem] overflow-hidden">
-        <UserMenu photo={photo} username={username} unfollow={unfollow} />
+        <UserMenu
+          photo={photo}
+          username={username}
+          unfollow={unfollow}
+          isLoading={isLoading}
+          userId={userId}
+        />
       </Modal.Window>
     </>
   ) : (
     !isUser && (
       <Button
-        className="m-0 w-fit min-w-max bg-blue-500 px-5 py-1.5 hover:bg-blue-600"
-        onClick={() => followUser(username)}
+        className={`m-0 w-fit min-w-max bg-blue-500 ${
+          isLoading && "bg-opacity-50"
+        } px-5 py-1.5 hover:bg-blue-600`}
+        onClick={() => {
+          followUser(username, userId);
+        }}
+        disabled={isLoading}
       >
         Follow
       </Button>

@@ -55,7 +55,9 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre(/^findOne/, function (next) {
-  this.populate('posts').select('-__v');
+  this.populate({path: 'posts', select: 'text createdAt user photo', options: {sort: {createdAt: -1}}, 
+    populate: { path: 'comments', model: 'Comment', select: 'text createdAt user', options: {sort: 
+    { createdAt: -1}}, populate: { path: 'user', model: 'User', select: 'name username photo' }}});
   next();
 });
 

@@ -9,7 +9,11 @@ function CreatePost() {
   return (
     <>
       <Modal.Button opens="create">
-        <NavItem src="post-icon" text="Create" />
+        <NavItem
+          src="post-icon.png"
+          text="Create"
+          onClick={(e) => e.preventDefault()}
+        />
       </Modal.Button>
       <Modal.Window
         name="create"

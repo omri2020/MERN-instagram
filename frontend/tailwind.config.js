@@ -1,3 +1,5 @@
+const plugin = require("tailwindcss/plugin");
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -13,7 +15,6 @@ export default {
       16: "4rem",
       200: "200%",
     },
-
     extend: {
       backgroundImage: {
         "gradient-animation":
@@ -30,5 +31,20 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        ".no-scrollbar": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+        },
+        ".no-scrollbar::-webkit-scrollbar": {
+          display: "none",
+        },
+        ".warning": {
+          "@apply text-red-500 font-bold": {},
+        },
+      });
+    }),
+  ],
 };

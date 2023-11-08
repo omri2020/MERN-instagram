@@ -29,6 +29,14 @@ commentSchema.pre(/^find/, function(next) {
     next();
 });
 
+commentSchema.pre('save', function(next) {
+    this.populate({
+        path: 'user',
+        select: 'username photo'
+    });
+    next();
+});
+
 const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;

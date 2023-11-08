@@ -4,18 +4,20 @@ import PostMenu from "./PostMenu";
 import PostLikes from "./PostLikes";
 import PostContent from "./PostContent";
 
-function PostCard({ post }) {
+function PostCard({ post, postName }) {
   return (
-    <div className="flex flex-col gap-3">
-      <PostMenu username={post.user.username} userPhoto={post.user.photo} />
-      <PostImg src={post.photo} />
-      <PostCTA
-        isLiked={post.isLiked}
+    <div className="mb-4 flex flex-col gap-3">
+      <PostMenu
+        username={post.user.username}
+        userPhoto={post.user.photo}
+        createdAt={post.createdAt}
         postId={post._id}
-        likeCount={post?.likeCount}
+        postUserUsername={post.user.username}
       />
-      <PostLikes likes={post.likeCount} />
-      <PostContent caption={post.caption} username={post.user.username} />
+      <PostImg src={post.photo} />
+      <PostCTA postId={post._id} postName={postName} />
+      <PostLikes likeCount={post.likeCount} />
+      <PostContent post={post} postName={postName} />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 const ModalContext = createContext();
 
-const Button = ({ children, opens, className }) => {
+const Button = ({ children, opens, className, ...props }) => {
   const { toggleModal } = useContext(ModalContext);
 
   return (
@@ -13,6 +13,7 @@ const Button = ({ children, opens, className }) => {
       onClick={() => {
         toggleModal(opens);
       }}
+      {...props}
     >
       {children}
     </button>

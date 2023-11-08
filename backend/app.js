@@ -12,7 +12,6 @@ const userRouter = require("./routes/userRoutes");
 const postRouter = require("./routes/postRoutes");
 
 dotenv.config({ path: "config.env" });
-
 const app = express();
 
 // Allow requests from the origin https://localhost:5173
@@ -46,10 +45,8 @@ app.use(session({
 }));
 
 // Routes
-
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/posts", postRouter);
-
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

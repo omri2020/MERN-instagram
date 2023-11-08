@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useCurrentUser } from "../user/useCurrentUser";
+import { useUser } from "../user/useUser";
+
 import UserPhoto from "../../components/UserPhoto";
 
 function CreatePostForm({ createPost }) {
-  const { data: user, isLoading } = useCurrentUser();
+  const { user } = useUser();
 
   const {
     register,

@@ -1,20 +1,17 @@
 import { useLoaderData } from "react-router-dom";
 import { getUser } from "../../api/user";
-import { useCurrentUser } from "./useCurrentUser";
+import { useUser } from "./useUser";
 import UserProfilePicture from "./UserProfilePicture";
 import UserActions from "./UserActions";
 import UserStats from "./UserStats";
 import UserPosts from "./UserPosts";
 
 function Profile() {
-  const { data: currentUser, isLoading } = useCurrentUser();
+  const { user: currentUser } = useUser();
   const { user } = useLoaderData();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   const isFollowed = currentUser?.following?.includes(user?._id);
+
   const isUser = currentUser?._id === user?._id;
 
   return (
@@ -26,6 +23,7 @@ function Profile() {
             <UserActions
               followed={isFollowed}
               username={user?.username}
+              userId={user?._id}
               photo={user?.photo}
               isUser={isUser}
             />

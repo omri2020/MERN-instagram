@@ -1,11 +1,14 @@
+import { useSocket } from "../contexts/SocketContext";
 import { useFeed } from "../features/user/useFeed";
-import { useSocketListeners } from "../hooks/useSocketListeners";
+import { useSocketListeners } from "../sockets/hooks/useSocketListeners";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import PostCard from "../features/posts/PostCard";
 import StoryCard from "../components/StoryCard";
 import PageLoader from "../ui/PageLoader";
 
 function Home() {
+  const { isConnected } = useSocket();
+
   useSocketListeners();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFeed();
@@ -17,7 +20,7 @@ function Home() {
     isFetchingNextPage,
   });
 
-  if (isLoading) {
+  if (isLoading || !isConnected) {
     return <PageLoader />;
   }
 
@@ -30,10 +33,10 @@ function Home() {
         <div className="w-fit self-center">
           {items?.map((post, index) => (
             <div
-              ref={items.length === index + 1 ? lastElementRef : null}
+              ref={items?.length === index + 1 ? lastElementRef : null}
               key={post._id}
             >
-              <PostCard post={post} />
+              <PostCard post={post} postName={`detailed-post-${index}`} />
             </div>
           ))}
           {isFetchingNextPage ? (

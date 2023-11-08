@@ -1,77 +1,109 @@
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSocket } from "../../hooks/useSocket";
-import { toggleLike as toggleLikeApi } from "../../api/post";
-
-// export const usePostActions = () => {
-//   const socket = useSocket();
-//   const queryClient = useQueryClient();
-
-//   const toggleLike = useCallback(
-//     async (postId, isLiked) => {
-//       try {
-//         // Optimistically update the UI
-//         const previousPost = queryClient.getQueryData(["post", postId]);
-//         queryClient.setQueryData(["post", postId], {
-//           ...previousPost,
-//           isLiked: !isLiked,
-//           likesCount: isLiked
-//             ? previousPost.likesCount - 1
-//             : previousPost.likesCount + 1,
-//         });
-
-//         // Make the API call to toggle like/unlike
-//         const updatedPost = await toggleLikeApi(postId);
-
-//         // Update the cache with the response from the server
-//         queryClient.setQueryData(["post", postId], updatedPost);
-
-//         // Emit the socket event
-//         socket.emit(isLiked ? "postUnliked" : "postLiked", { postId });
-//       } catch (error) {
-//         console.error("Error toggling like:", error);
-//         // If there was an error, roll back the optimistic update
-//         queryClient.invalidateQueries(["post", postId]);
-//       }
-//     },
-//     [socket, queryClient],
-//   );
-
-//   return { toggleLike };
-// };
+import {
+  toggleLike as toggleLikeApi,
+  addComment as addCommentApi,
+} from "../../api/post";
+import { useUser } from "../user/useUser";
 
 export const usePostActions = () => {
-  const socket = useSocket();
   const queryClient = useQueryClient();
+  const { user } = useUser();
+
+  const updateFeedOptimistically = useCallback(
+    (postId, updateFn) => {
+      const feedQueries = queryClient
+        .getQueryCache()
+        .findAll({ queryKey: ["userFeed"] });
+      feedQueries.forEach((query) => {
+        const oldData = query.state.data;
+        if (oldData) {
+          const updatedPages = oldData.pages.map((page) => ({
+            ...page,
+            posts: page.posts.map((post) =>
+              post._id === postId ? updateFn(post) : post,
+            ),
+          }));
+          queryClient.setQueryData(query.queryKey, {
+            ...oldData,
+            pages: updatedPages,
+          });
+        }
+      });
+    },
+    [queryClient],
+  );
 
   const toggleLike = useCallback(
     async (postId, isLiked) => {
-      console.log("Toggling Like: ", isLiked);
+      const userId = user?._id;
+      if (!userId) return;
 
-      // Optimistic update
       const previousPost = queryClient.getQueryData(["post", postId]);
-      queryClient.setQueryData(["post", postId], {
-        ...previousPost,
-        isLiked: !isLiked,
-        likeCount: isLiked
-          ? previousPost?.likeCount - 1
-          : previousPost?.likeCount + 1,
+      if (!previousPost) return;
+
+      const updateFn = (post) => ({
+        ...post,
+        likes: isLiked
+          ? post.likes.filter((like) => like._id !== userId)
+          : [...post.likes, { _id: userId }],
+        likeCount: post.likeCount + (isLiked ? -1 : 1),
       });
 
+      // Optimistic updates for ["post", postId] and ["userFeed"]
+      queryClient.setQueryData(["post", postId], updateFn(previousPost));
+      updateFeedOptimistically(postId, updateFn);
+
       try {
-        const updatedPost = await toggleLikeApi(postId);
-        console.log("Updated Post from API: ", updatedPost);
+        const { data: updatedPost } = await toggleLikeApi(postId);
         queryClient.setQueryData(["post", postId], updatedPost);
+        updateFeedOptimistically(postId, () => updatedPost);
       } catch (error) {
         console.error("Error toggling like:", error);
-        // Revert back to previous state in case of error
+        // Roll back optimistic updates if there was an error
         queryClient.setQueryData(["post", postId], previousPost);
+        updateFeedOptimistically(postId, () => previousPost);
       }
-
-      socket.emit(isLiked ? "postUnliked" : "postLiked", { postId });
     },
-    [socket, queryClient],
+    [queryClient, user, updateFeedOptimistically],
   );
 
-  return { toggleLike };
+  const addComment = useCallback(
+    async (postId, comment) => {
+      const userId = user?._id;
+      if (!userId) return;
+
+      const previousPost = queryClient.getQueryData(["post", postId]);
+      if (!previousPost) return;
+
+      const updateFn = (post) => ({
+        ...post,
+        commentCount: post.commentCount + 1,
+        comments: [...post.comments, comment],
+      });
+
+      // Optimistic updates for ["post", postId] and ["userFeed"]
+      queryClient.setQueryData(["post", postId], updateFn(previousPost));
+      updateFeedOptimistically(postId, updateFn);
+
+      try {
+        const { post: updatedPost } = await addCommentApi(postId, {
+          text: comment.text,
+        });
+        queryClient.setQueryData(["post", postId], updatedPost);
+        updateFeedOptimistically(postId, () => updatedPost);
+      } catch (error) {
+        console.error("Error adding comment", error);
+
+        // Roll back optimistic update if there was an error
+        if (previousPost) {
+          queryClient.setQueryData(["post", postId], previousPost);
+        }
+        updateFeedOptimistically(postId, () => previousPost);
+      }
+    },
+    [queryClient, user, updateFeedOptimistically],
+  );
+
+  return { toggleLike, addComment };
 };

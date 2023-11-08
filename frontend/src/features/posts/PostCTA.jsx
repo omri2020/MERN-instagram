@@ -1,56 +1,65 @@
-// import React from "react";
-// import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-// import Icon from "../../components/Icon";
-// import { usePostActions } from "../posts/usePostActions";
-// import { usePostSocketListeners } from "../../hooks/usePostSocketListeners";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useUser } from "../user/useUser";
+import { usePostSocketListener } from "../../sockets/hooks/usePostSocketListeners";
+import { usePostActions } from "./usePostActions";
+import { getPost } from "../../api/post";
+import * as handlers from "../../sockets/handlers/postUpdateHandlers";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import Icon from "../../components/Icon";
+import Modal from "../../components/Modal";
 
-// function PostCTA({ isLiked, postId, likesCount }) {
-//   usePostSocketListeners(postId); // This listens to like/unlike events from other users
-//   const { toggleLike, isLoading } = usePostActions();
-
-//   return (
-//     <div className="flex items-center justify-between">
-//       <div className="flex items-center justify-center gap-4">
-//         {isLiked ? (
-//           <AiFillHeart
-//             size={30}
-//             className="cursor-pointer text-red-500"
-//             onClick={() => toggleLike(postId, isLiked)}
-//             disabled={isLoading}
-//           />
-//         ) : (
-//           <AiOutlineHeart
-//             size={30}
-//             className="cursor-pointer"
-//             onClick={() => toggleLike(postId, isLiked)}
-//             disabled={isLoading}
-//           />
-//         )}
-//         <span>{likesCount}</span>
-//         <Icon src="message-icon" />
-//         <Icon src="share-icon" />
-//       </div>
-//       <Icon src="collections-icon" />
-//     </div>
-//   );
-// }
-
-// export default PostCTA;
-import { usePostActions } from "../posts/usePostActions";
-
-function PostCTA({ isLiked, postId, likeCount }) {
+const PostCTA = React.memo(function PostCTA({ postId, size, postName }) {
+  const { user } = useUser();
+  const userId = user?._id;
   const { toggleLike } = usePostActions();
 
-  const onClick = () => {
-    console.log("Button Clicked: ", isLiked);
-    toggleLike(postId, isLiked);
+  usePostSocketListener(postId, handlers.handleLike, "postLiked");
+  usePostSocketListener(postId, handlers.handleUnlike, "postUnliked");
+
+  const { data: post } = useQuery({
+    queryKey: ["post", postId],
+    queryFn: getPost,
+  });
+
+  const isLiked = post?.likes
+    ? post.likes.some((like) => like._id === userId)
+    : false;
+
+  const onClick = async () => {
+    toggleLike(postId, isLiked, userId);
   };
 
   return (
-    <button onClick={onClick}>
-      {isLiked ? "Liked" : "Not Liked"} - {likeCount}
-    </button>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center justify-center gap-4">
+        {isLiked ? (
+          <AiFillHeart
+            size={`${size === "detailed" ? 25 : 30}`}
+            className="cursor-pointer text-red-500"
+            onClick={onClick}
+          />
+        ) : (
+          <AiOutlineHeart
+            size={`${size === "detailed" ? 25 : 30}`}
+            className="cursor-pointer"
+            onClick={onClick}
+          />
+        )}
+        <Modal.Button opens={postName}>
+          <Icon
+            src="message-icon.png"
+            height={`${size === "detailed" ? 5 : 6}`}
+          />
+        </Modal.Button>
+        <Icon src="share-icon.png" height={`${size === "detailed" ? 5 : 6}`} />
+      </div>
+      <Icon
+        src="collections-icon.png"
+        height={`${size === "detailed" ? 5 : 6}`}
+      />
+    </div>
   );
-}
+});
 
 export default PostCTA;

@@ -45,6 +45,17 @@ exports.getUser = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.getCurrentUser = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    
+    if(!user) return next(new AppError('You are not logged in!', 403));
+
+    res.status(200).json({
+        status: "success",
+        user: user
+    })
+});
+
 exports.updateMe = catchAsync(async (req,res,next) => {
     // 1) Create error if user POSTs password data
     if (req.body.password || req.body.passwordConfirm) {
@@ -73,7 +84,7 @@ exports.getFeed = catchAsync(async (req, res, next) => {
     const offset = Number(req.query.offset) || 0;
 
     const posts = await Post.find({ user: { $in: following } })
-        .populate({path: 'user', select: 'username photo'})
+        .populate({path: 'comments', select: 'text createdAt user', options: {sort: {createdAt: -1}}})
         .sort({ createdAt: -1, _id: -1 })
         .skip(offset)
         .limit(limit);

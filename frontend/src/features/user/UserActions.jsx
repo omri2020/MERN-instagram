@@ -1,7 +1,8 @@
 import Button from "../../components/Button";
 import FollowingButton from "./FollowingButton";
+import MenuButton from "../../components/MenuButton";
 
-function UserActions({ username, photo, followed, isUser }) {
+function UserActions({ username, photo, followed, isUser, userId }) {
   return (
     <div className="flex items-center gap-2 pb-6">
       <h1 className="mr-6 text-xl">{username}</h1>
@@ -10,6 +11,7 @@ function UserActions({ username, photo, followed, isUser }) {
         username={username}
         followed={followed}
         isUser={isUser}
+        userId={userId}
       />
       <Button className="m-0 w-fit bg-gray-200 bg-opacity-80 px-5 py-1.5 text-slate-900 hover:bg-gray-300">
         Message
@@ -22,11 +24,7 @@ function UserActions({ username, photo, followed, isUser }) {
         />
       </Button>
       <button className="bg-transparent pl-4">
-        <img
-          src="/img/icons/three-dots.svg"
-          alt="menu-button"
-          className="h-4"
-        />
+        <MenuButton />
       </button>
     </div>
   );

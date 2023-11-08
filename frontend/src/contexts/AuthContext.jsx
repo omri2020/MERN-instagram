@@ -1,18 +1,41 @@
-import React, { createContext, useContext } from "react";
-import useAuth from "../features/auth/useAuth";
+import React, { createContext, useContext, useEffect } from "react";
+import { getToken, isTokenExpired } from "../services/tokenService";
+import refreshTokenPeriodically from "../services/tokenRefreshService";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const auth = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = React.useState(null);
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  useEffect(() => {
+    const token = getToken();
+    setIsAuthenticated(token && !isTokenExpired(token));
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const cleanup = refreshTokenPeriodically();
+
+      return cleanup;
+    }
+  }, [isAuthenticated]);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        setIsAuthenticated,
+        isAuthenticated,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuthContext = () => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuthContext must be used within an AuthProvider");
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

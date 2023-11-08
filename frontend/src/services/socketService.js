@@ -1,26 +1,26 @@
 import { io } from "socket.io-client";
+import { getToken } from "./tokenService";
 
-let socket;
+export const connectSocket = () => {
+  console.log("Attempting to connect socket...");
 
-export const connectSocket = (token) => {
-  socket = io("http://localhost:5000", {
+  const socket = io("http://localhost:5000", {
     withCredentials: true,
     query: {
-      token,
+      token: getToken(),
     },
   });
 
   socket.on("connect", () => {
     console.log("Socket.IO connected!");
   });
+
+  return socket;
 };
 
-export const disconnectSocket = () => {
+export const disconnectSocket = (socket) => {
   if (socket) {
+    console.log("Disconnecting socket...");
     socket.disconnect();
   }
 };
-
-export const getSocket = () => socket;
-
-export default socket;

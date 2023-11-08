@@ -7,6 +7,9 @@ const router = express.Router();
 // Auth check
 router.get("/auth-check", authController.authCheck);
 
+// refresh access token
+router.post("/refresh", authController.refreshAccessToken)
+
 // authentication routes
 router.post("/login", authController.login);
 router.post("/signup", authController.signup);
@@ -17,6 +20,7 @@ router.patch("/resetPassword/:token");
 
 router.patch("/updateMyPassword");
 router.patch("/updateMe", authController.protect, userController.uploadUserPhoto, userController.updateMe);
+router.get("/me", authController.protect, userController.getCurrentUser);
 
 // get user feed posts (posts from people you follow along with your own posts)
 router.get("/feed", authController.protect, userController.getFeed);

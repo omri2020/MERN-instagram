@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const User = require('./userModel');
 
 const postSchema = new mongoose.Schema({
   caption: {
@@ -29,6 +28,7 @@ const postSchema = new mongoose.Schema({
       ref: "Comment",
     },
   ],
+  isLiked: Boolean,
 }, {toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
 postSchema.virtual('likeCount').get(function() {
@@ -39,11 +39,24 @@ postSchema.virtual('commentCount').get(function() {
   return this.comments.length;
 });
 
-// postSchema.pre('/^find/', function(next) {
-//   this.populate({path: 'likes', select: 'username photo'});
+postSchema.pre(/^find/,function(next) {
+  this.populate({
+    path: 'user',
+    select: 'username photo'
+  }).populate({path: 'likes', select: 'username photo'});
 
-//   next();
-// })
+  next();
+})
+
+postSchema.pre(/^findOne/, function(next) {
+  this.populate({
+    path: 'comments',
+    select: 'text createdAt user',
+  });
+
+  next();
+})
+
 
 const Post = mongoose.model("Post", postSchema);
 

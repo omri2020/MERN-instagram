@@ -26,7 +26,7 @@ export function useInfiniteScroll({
   );
 
   const items = data?.pages.reduce((acc, page) => {
-    return [...acc, ...page.posts];
+    return [...acc, ...page?.posts];
   }, []);
 
   return { lastElementRef, items };

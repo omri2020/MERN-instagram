@@ -1,6 +1,13 @@
 import API from "./index";
 import catchAsync from "../utils/catchAsync";
 
+export const getPost = async ({ queryKey }) => {
+  const [, postId] = queryKey;
+  const res = await API.get(`/posts/${postId}`);
+  const data = res.data.post;
+  return data;
+};
+
 export const createPost = async (post) => {
   try {
     const res = await API.post("/posts", post);
@@ -40,5 +47,10 @@ export const deletePhoto = async (fileName) => {
 
 export const toggleLike = catchAsync(async (postId) => {
   const res = await API.patch(`/posts/${postId}/toggle-like`);
+  return res.data;
+});
+
+export const addComment = catchAsync(async (postId, comment) => {
+  const res = await API.post(`/posts/${postId}/comment`, comment);
   return res.data;
 });
