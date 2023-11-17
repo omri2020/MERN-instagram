@@ -6,9 +6,9 @@ import {
 } from "react-router-dom";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { SocketProvider } from "./contexts/SocketContext";
 import { AuthProvider } from "./contexts/AuthContext";
-import { UserProvider } from "./contexts/UserContext";
+import { ChatProvider } from "./contexts/ChatContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
 import Modal from "./components/Modal";
 import Home from "./pages/Home";
 import AppLayout from "./ui/AppLayout";
@@ -17,6 +17,8 @@ import Signup from "./pages/Signup";
 import ProtectedLayout from "./features/auth/ProtectedLayout";
 import ProfilePage from "./pages/ProfilePage";
 import { profileLoader } from "./features/user/Profile";
+import InboxPage from "./pages/InboxPage";
+import MessagesBox from "./features/chat/MessagesBox";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +38,9 @@ const router = createBrowserRouter(
           element={<ProfilePage />}
           loader={profileLoader}
         />
+        <Route path="/direct/inbox" element={<InboxPage />}>
+          <Route path="/direct/inbox/:chatId" element={<MessagesBox />} />
+        </Route>
       </Route>
     </>,
   ),
@@ -44,14 +49,14 @@ const router = createBrowserRouter(
 function App() {
   return (
     <AuthProvider>
-      <SocketProvider>
-        <UserProvider>
+      <ChatProvider>
+        <NotificationProvider>
           <Modal>
             <RouterProvider router={router} />
           </Modal>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </UserProvider>
-      </SocketProvider>
+        </NotificationProvider>
+      </ChatProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </AuthProvider>
   );
 }

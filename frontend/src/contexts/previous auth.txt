@@ -1,0 +1,268 @@
+sokcet.js file
+
+const { Server } = require("socket.io");
+const { verifyToken } = require("./controllers/authController");
+const AppError = require("./utils/appError");
+
+const socketMap = {};
+
+const setupSocketIO = (server) => {
+  const io = new Server(server, {
+    cors: {
+      origin: ["http://localhost:5173"],
+      methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "HEAD"],
+      credentials: true,
+    },
+  });
+
+  // Add a middleware to authenticate users before they can connect to the socket
+  io.use(async (socket, next) => {
+    try {
+      const token = socket.handshake.query.token;
+      const user = await verifyToken(token);
+      if (user) {
+        socket.user = user;
+        return next();
+      } else {
+        return next(new AppError("Authentication error"));
+      }
+    } catch (err) {
+      return next(new AppError("Authentication error"));
+    }
+  });
+
+  // Listen for socket connections
+  io.on("connection", (socket) => {
+    // When a user is authenticated, add their socket to the map
+    if (socket.user && socket.user._id) {
+      socketMap[socket.user._id] = socket;
+      console.log(
+        `Socket connected with user ${socket.user.username} and added to socketMap`,
+      );
+    }
+
+    socket.on("readyForMessages", () => {
+      if (!socket.user || !socket.user.username) {
+        console.error("User data not available on socket.");
+        return; // Exit the function if user is not defined
+      }
+      io.emit("userLoggedIn", { username: socket.user.username });
+      console.log(`User ${socket.user.username} is ready for messages`);
+    });
+
+    socket.on("joinChat", (chatId) => {
+      Array.from(socket.rooms).forEach((room) => {
+        if (room !== socket.id) {
+          socket.leave(room);
+        }
+      });
+      console.log(`User ${socket.user.username} joined chat ${chatId}`);
+      socket.join(chatId);
+      socket.currentChatId = chatId;
+    });
+
+    socket.on("leaveChat", (chatId) => {
+      console.log(`User ${socket.user.username} left chat ${chatId}`);
+      socket.leave(chatId);
+      socket.currentChatId = null;
+    });
+
+    socket.on("typing", (chatId) => {
+      socket
+        .to(chatId)
+        .emit("typing", { username: socket.user.username, chatId });
+    });
+
+    socket.on("stopped_typing", (chatId) => {
+      socket
+        .to(chatId)
+        .emit("stopped_typing", { username: socket.user.username, chatId });
+    });
+
+    socket.on("disconnect", () => {
+      if (socket.user && socket.user._id) {
+        delete socketMap[socket.user._id];
+        console.log(
+          `Socket disconnected with user ${socket.user.username} and removed from socketMap`,
+        );
+      } else {
+        console.log("A socket disconnected");
+      }
+    });
+  });
+
+  return io;
+};
+// Export both the setupSocketIO function and the socketMap
+module.exports = { setupSocketIO, socketMap };
+
+logout controller:
+
+exports.logout = (req, res, next) => {
+  // Destroy session
+  req.session.destroy((err) => {
+    if (err) {
+      console.log("Session destruction failed");
+      return next(new AppError("Session destruction failed", 500));
+    }
+  });
+
+  // Clear the token and session cookies
+  res.clearCookie("refreshToken");
+  res.clearCookie("connect.sid", { path: "/" });
+
+  res.status(200).json({
+    status: "success",
+    message: "You have been logged out",
+  });
+};
+
+
+and on the client side
+
+socketService:
+import { io } from "socket.io-client";
+import { getToken } from "./tokenService";
+
+export const connectSocket = () => {
+  console.log("Attempting to connect socket...");
+
+  const socket = io("http://localhost:5000", {
+    withCredentials: true,
+    query: {
+      token: getToken(),
+    },
+  });
+
+  socket.on("connect", () => {
+    console.log("Socket.IO connected!", socket);
+  });
+
+  return socket;
+};
+
+export const disconnectSocket = (socket) => {
+  if (socket) {
+    console.log("Disconnecting socket...");
+    socket.off();
+    socket.disconnect();
+  }
+};
+
+SocketContext
+
+import React, { useEffect, useContext, createContext, useState } from "react";
+import { connectSocket, disconnectSocket } from "../services/socketService";
+import { useAuth } from "./AuthContext";
+
+const SocketContext = createContext(null);
+
+export const SocketProvider = ({ children }) => {
+  const [socket, setSocket] = useState(null);
+  console.log("SocketContext: useState initialized");
+  const { authStatus } = useAuth();
+  const [isConnected, setIsConnected] = useState(false);
+
+  // Connect/disconnect the socket when the auth state changes
+  useEffect(() => {
+    console.log("SocketContext: Authenticated - attempting to connect socket");
+    if (authStatus === "authenticated") {
+      console.log("Connecting socket due to authentication...");
+      const newSocket = connectSocket();
+      setSocket(newSocket);
+
+      const handleConnect = () => {
+        console.log("Socket.IO connected!");
+        setIsConnected(true);
+      };
+
+      const handleDisconnect = () => {
+        console.log("Socket.IO disconnected.");
+        setIsConnected(false);
+        setSocket(null);
+      };
+
+      const handleError = (error) => {
+        console.error("Socket.IO Error:", error);
+        setIsConnected(false);
+      };
+
+      newSocket.on("connect", handleConnect);
+      newSocket.on("disconnect", handleDisconnect);
+      newSocket.on("error", handleError);
+
+      console.log(
+        "SocketContext: Cleanup - disconnecting socket and removing listeners",
+      );
+      return () => {
+        console.log("Disconnecting socket...");
+        disconnectSocket(newSocket);
+        newSocket.off("connect", handleConnect);
+        newSocket.off("disconnect", handleDisconnect);
+        newSocket.off("error", handleError);
+      };
+    } else {
+      if (socket) {
+        console.log("Disconnecting socket due to auth state...");
+        disconnectSocket(socket);
+        setSocket(null);
+      }
+    }
+  }, [authStatus]);
+
+  // Subscribe to chat update events
+
+  return (
+    <SocketContext.Provider value={{ socket, isConnected }}>
+      {children}
+    </SocketContext.Provider>
+  );
+};
+
+export const useSocket = () => {
+  const context = useContext(SocketContext);
+  if (context === undefined) {
+    throw new Error("useSocket must be used within a SocketProvider");
+  }
+  return context;
+};
+
+
+and useLogout
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "../../contexts/SocketContext";
+import { disconnectSocket } from "../../services/socketService";
+import { clearToken } from "../../services/tokenService";
+import { logout } from "../../api/auth";
+
+export const useLogout = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { socket } = useSocket();
+
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      console.log("Logout success");
+      localStorage.removeItem("REACT_QUERY_OFFLINE_CACHE");
+      localStorage.removeItem("username");
+      disconnectSocket(socket);
+      queryClient.clear();
+      clearToken();
+    },
+    onError: (error) => console.log("Logout error: ", error.message),
+  });
+
+  const logoutUser = () => {
+    logoutMutation.mutate();
+    navigate("/login");
+  };
+
+  return {
+    logoutUser,
+    isLogoutLoading: logoutMutation.isLoading,
+    logoutError: logoutMutation.error,
+  };
+};

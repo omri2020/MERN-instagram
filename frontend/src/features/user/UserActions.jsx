@@ -18,7 +18,7 @@ function UserActions({ username, photo, followed, isUser, userId }) {
       </Button>
       <Button className="m-0 w-fit  bg-gray-200 bg-opacity-80 px-3 py-2 hover:bg-gray-300">
         <img
-          src="public/img/icons/add-friend.png"
+          src="/img/icons/add-friend.png"
           alt="add-friend"
           className="h-3.5"
         />

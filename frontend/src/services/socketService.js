@@ -12,15 +12,23 @@ export const connectSocket = () => {
   });
 
   socket.on("connect", () => {
-    console.log("Socket.IO connected!");
+    console.log("Socket.IO connected!", socket);
   });
 
   return socket;
 };
 
+// export const disconnectSocket = (socket) => {
+//   if (socket) {
+//     console.log("Disconnecting socket...");
+//     socket.off();
+//     socket.disconnect();
+//   }
+// };
+
 export const disconnectSocket = (socket) => {
   if (socket) {
-    console.log("Disconnecting socket...");
-    socket.disconnect();
+    console.log(`Disconnecting socket with ID ${socket.id}...`);
+    socket.emit("disconnect_request");
   }
 };

@@ -4,14 +4,11 @@ import { useAuth } from "../../contexts/AuthContext";
 
 export const useSocketListeners = () => {
   const { socket, isConnected } = useSocket();
-  const { isAuthenticated } = useAuth();
+  const { authStatus } = useAuth();
 
   useEffect(() => {
-    if (socket && isConnected && isAuthenticated) {
-      console.log(
-        "Setting up socket listeners for user:",
-        socket?.user?.username,
-      );
+    if (socket && isConnected && authStatus === "authenticated") {
+      console.log("Setting up socket listeners");
       socket.emit("readyForMessages");
 
       socket.on("userLoggedIn", (data) => {
@@ -28,5 +25,5 @@ export const useSocketListeners = () => {
         // Remove other listeners as needed
       }
     };
-  }, [socket, isConnected]); // Re-run this effect if the socket instance changes
+  }, [socket, isConnected, authStatus]); // Re-run this effect if the socket instance changes
 };

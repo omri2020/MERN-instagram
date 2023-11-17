@@ -3,7 +3,7 @@ import NavItem from "../components/NavItem";
 import CreatePostWindow from "../features/posts/CreatePostWindow";
 import Modal from "../components/Modal";
 
-function CreatePost() {
+function CreatePost({ text }) {
   const [stepCount, setStepCount] = useState(0);
 
   return (
@@ -11,7 +11,7 @@ function CreatePost() {
       <Modal.Button opens="create">
         <NavItem
           src="post-icon.png"
-          text="Create"
+          text={text}
           onClick={(e) => e.preventDefault()}
         />
       </Modal.Button>

@@ -51,3 +51,13 @@ export const unfollow = catchAsync(async (username) => {
   const res = await API.patch(`/users/unfollow/${username}`);
   return res.data;
 });
+
+export const getFollowing = catchAsync(async () => {
+  const res = await API.get(`/users/following`);
+  return res.data;
+});
+
+export const getAllUserChats = catchAsync(async () => {
+  const res = await API.get("/users/chats");
+  return res.data;
+});

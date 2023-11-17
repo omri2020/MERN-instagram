@@ -39,25 +39,28 @@ const userSchema = new mongoose.Schema({
   gender: {
     type: String,
     enum: {
-      values: ['Male', 'Female'],
-      message: 'Please insert a valid gender.'
-    }
+      values: ["Male", "Female"],
+      message: "Please insert a valid gender.",
+    },
   },
-  posts: [
-    { type: mongoose.Schema.ObjectId, ref: "Post" }
-  ],
-  followers: [
-    { type: mongoose.Schema.ObjectId, ref: "User" }
-  ],
-  following: [
-    { type: mongoose.Schema.ObjectId, ref: "User" }
-  ],
+  posts: [{ type: mongoose.Schema.ObjectId, ref: "Post" }],
+  followers: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
+  following: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
 });
 
 userSchema.pre(/^findOne/, function (next) {
-  this.populate({path: 'posts', select: 'text createdAt user photo', options: {sort: {createdAt: -1}}, 
-    populate: { path: 'comments', model: 'Comment', select: 'text createdAt user', options: {sort: 
-    { createdAt: -1}}, populate: { path: 'user', model: 'User', select: 'name username photo' }}});
+  this.populate({
+    path: "posts",
+    select: "text createdAt user photo",
+    options: { sort: { createdAt: -1 } },
+    populate: {
+      path: "comments",
+      model: "Comment",
+      select: "text createdAt user",
+      options: { sort: { createdAt: -1 } },
+      populate: { path: "user", model: "User", select: "name username photo" },
+    },
+  });
   next();
 });
 
@@ -82,7 +85,7 @@ userSchema.method("changedPasswordAfter", function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
-      10
+      10,
     );
 
     return JWTTimestamp < changedTimestamp;

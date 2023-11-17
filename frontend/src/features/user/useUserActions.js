@@ -9,6 +9,7 @@ export function useUserActions() {
     onSuccess: () => {
       console.log("followed user");
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      queryClient.invalidateQueries({ queryKey: ["following"] });
     },
     onError: (error) => {
       console.log(error);
@@ -43,6 +44,7 @@ export function useUserActions() {
     onSuccess: () => {
       console.log("unfollowed user");
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      queryClient.invalidateQueries({ queryKey: ["following"] });
     },
     onError: (error) => {
       console.log(error);

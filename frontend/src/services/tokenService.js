@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import { APIWithoutInterceptor } from "../api";
 
 export const getToken = () => {
   return localStorage.getItem("accessToken") ?? false;
@@ -60,5 +61,17 @@ export const isTokenExpiringSoon = (token) => {
   } catch (error) {
     console.error("Error decoding token:", error);
     return false; // If there's an error decoding, consider the token not expiring soon.
+  }
+};
+
+export const refreshAuthToken = async () => {
+  try {
+    const response = await APIWithoutInterceptor.post("/users/refresh");
+    const newToken = response.data.accessToken;
+    setToken(newToken);
+    return true;
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    return false;
   }
 };

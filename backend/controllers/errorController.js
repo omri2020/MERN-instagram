@@ -5,6 +5,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || "error";
 
   if (process.env.NODE_ENV === "development") {
+    console.log(err.message);
     res.status(err.statusCode).json({
       status: err.status,
       error: err,
@@ -26,7 +27,7 @@ module.exports = (err, req, res, next) => {
 
     // Log additional error details if necessary
     if (err.additionalInfo) {
-      console.error('Additional Error Information:', err.additionalInfo);
+      console.error("Additional Error Information:", err.additionalInfo);
     }
 
     res.status(err.statusCode).json({

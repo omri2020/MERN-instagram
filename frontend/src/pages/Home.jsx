@@ -1,18 +1,18 @@
+import React from "react";
 import { useSocket } from "../contexts/SocketContext";
 import { useFeed } from "../features/user/useFeed";
 import { useSocketListeners } from "../sockets/hooks/useSocketListeners";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
+import { useNotification } from "../contexts/NotificationContext";
 import PostCard from "../features/posts/PostCard";
 import StoryCard from "../components/StoryCard";
 import PageLoader from "../ui/PageLoader";
 
 function Home() {
-  const { isConnected } = useSocket();
-
   useSocketListeners();
+  const { isConnected } = useSocket();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useFeed();
-
   const { lastElementRef, items } = useInfiniteScroll({
     data,
     fetchNextPage,
@@ -20,7 +20,15 @@ function Home() {
     isFetchingNextPage,
   });
 
-  if (isLoading || !isConnected) {
+  const { refetchNotifications, isLoadingNotifications } = useNotification();
+
+  React.useEffect(() => {
+    if (isConnected) {
+      refetchNotifications();
+    }
+  }, [isConnected, refetchNotifications]);
+
+  if (isLoading || !isConnected || isLoadingNotifications) {
     return <PageLoader />;
   }
 

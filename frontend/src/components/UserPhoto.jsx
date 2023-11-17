@@ -2,6 +2,7 @@ import { twMerge } from "tailwind-merge";
 import { BACKEND_URL } from "../utils/constants";
 
 const sizes = {
+  medium: "h-10 w-10",
   small: "h-8 w-8",
   mini: "h-4 w-4",
 };
