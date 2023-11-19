@@ -1,10 +1,9 @@
 import { useForm } from "react-hook-form";
-import { useUser } from "../user/useUser";
-
+import { useUserContext } from "../../contexts/UserContext";
 import UserPhoto from "../../components/UserPhoto";
 
 function CreatePostForm({ createPost }) {
-  const { user } = useUser();
+  const { user } = useUserContext();
 
   const {
     register,

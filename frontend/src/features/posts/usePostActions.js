@@ -1,14 +1,14 @@
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUserContext } from "../../contexts/UserContext";
 import {
   toggleLike as toggleLikeApi,
   addComment as addCommentApi,
 } from "../../api/post";
-import { useUser } from "../user/useUser";
 
 export const usePostActions = () => {
   const queryClient = useQueryClient();
-  const { user } = useUser();
+  const { user } = useUserContext();
 
   const updateFeedOptimistically = useCallback(
     (postId, updateFn) => {

@@ -1,11 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useUser } from "../user/useUser";
+import { useUserContext } from "../../contexts/UserContext";
 import { useTyping } from "./hooks/useTyping";
 import TypingIndicator from "./TypingIndicator";
 
 const MessagesContainer = ({ messages }) => {
-  const { user } = useUser();
+  const { user } = useUserContext();
   const { chatId } = useParams();
   const userId = user?._id;
 

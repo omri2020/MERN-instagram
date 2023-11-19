@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { useUser } from "../user/useUser";
+import { useUserContext } from "../../contexts/UserContext";
 import { useCreateChat } from "./hooks/useCreateChat";
 import { useChat } from "../../contexts/ChatContext";
 import ChatBoxDefault from "./ChatBoxDefault";
@@ -17,7 +17,7 @@ const Inbox = () => {
     user,
     isLoading: isLoadingUser,
     isFetching: isFetchingUser,
-  } = useUser();
+  } = useUserContext();
 
   const { chatUsers, isLoading: isLoadingChats } = useChat();
 

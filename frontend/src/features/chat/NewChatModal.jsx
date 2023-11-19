@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "../user/useUser";
+import { useUserContext } from "../../contexts/UserContext";
 import { useChat } from "../../contexts/ChatContext";
 import ModalHeader from "./ModalHeader";
 import SearchBar from "./SearchBar";
@@ -16,7 +16,7 @@ const NewChatModal = ({ closeModal, createChat, isLoadingChat }) => {
     queryKey: ["following"],
     queryFn: getFollowing,
   });
-  const { user, isLoading, isFetching } = useUser();
+  const { user, isLoading, isFetching } = useUserContext();
 
   const followings = data?.data;
 

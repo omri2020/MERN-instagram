@@ -1,13 +1,13 @@
 import { useLoaderData } from "react-router-dom";
 import { getUser } from "../../api/user";
-import { useUser } from "./useUser";
+import { useUserContext } from "../../contexts/UserContext";
 import UserProfilePicture from "./UserProfilePicture";
 import UserActions from "./UserActions";
 import UserStats from "./UserStats";
 import UserPosts from "./UserPosts";
 
 function Profile() {
-  const { user: currentUser } = useUser();
+  const { user: currentUser } = useUserContext();
   const { user } = useLoaderData();
 
   const isFollowed = currentUser?.following?.includes(user?._id);

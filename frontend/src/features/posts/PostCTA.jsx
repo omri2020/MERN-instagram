@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "../user/useUser";
+import { useUserContext } from "../../contexts/UserContext";
 import { usePostSocketListener } from "../../sockets/hooks/usePostSocketListeners";
 import { usePostActions } from "./usePostActions";
 import { getPost } from "../../api/post";
@@ -10,7 +10,7 @@ import Icon from "../../components/Icon";
 import Modal from "../../components/Modal";
 
 const PostCTA = React.memo(function PostCTA({ postId, size, postName }) {
-  const { user } = useUser();
+  const { user } = useUserContext();
   const userId = user?._id;
   const { toggleLike } = usePostActions();
 

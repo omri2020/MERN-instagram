@@ -5,10 +5,9 @@ function DiscardButton({
   deletePhoto,
   currentPhoto,
   stepCount,
-  setStepCount,
+  dispatch,
   closeModal,
 }) {
-  console.log(stepCount);
   return (
     <>
       {stepCount === 0 ? (
@@ -16,7 +15,7 @@ function DiscardButton({
           <Icon src="discard-icon.png" height={6} />
         </Modal.Button>
       ) : (
-        <button onClick={() => setStepCount((p) => p - 1)}>
+        <button onClick={() => dispatch({ type: "prevStep" })}>
           <Icon src="discard-icon.png" height={6} />
         </button>
       )}

@@ -1,15 +1,11 @@
 import Button from "../../components/Button";
-import { BACKEND_URL } from "../../utils/constants";
+import MiniLoader from "../../components/MiniLoader";
 
-function UploadPhotoForm({ uploadPhoto, isLoading, error, currentPhoto }) {
-  const imageUrl = currentPhoto
-    ? `${BACKEND_URL}/public/img/posts/${currentPhoto}`
-    : null;
-
+function UploadPhotoForm({ uploadPhoto, isLoading, error }) {
   return (
-    <>
-      {currentPhoto ? (
-        <img src={imageUrl} alt="Uploaded" className="h-full object-cover" />
+    <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+      {isLoading ? (
+        <MiniLoader />
       ) : (
         <>
           <svg
@@ -57,11 +53,10 @@ function UploadPhotoForm({ uploadPhoto, isLoading, error, currentPhoto }) {
             </Button>
             {isLoading && <p>Uploading...</p>}
             {error && <p className="text-red-500">{error.message}</p>}
-            {currentPhoto && <img src={currentPhoto} alt="Uploaded" />}
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
 

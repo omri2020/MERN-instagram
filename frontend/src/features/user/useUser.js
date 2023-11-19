@@ -5,9 +5,11 @@ import { getUser } from "../../api/user";
 export const useUser = () => {
   const [user, setUser] = useState(null);
   const username = localStorage.getItem("username");
+
   const { data, isLoading, isFetching, isError, isSuccess } = useQuery({
-    queryKey: ["currentUser"],
+    queryKey: ["currentUser", username],
     queryFn: () => getUser(username),
+    enabled: !!username,
   });
 
   useEffect(() => {

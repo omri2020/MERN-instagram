@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
-import { useUser } from "../../user/useUser";
+import { useUserContext } from "../../../contexts/UserContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage as sendMessageApi } from "../../../api/chat";
 import { v4 as uuidv4 } from "uuid";
 
 export const useSendMessage = () => {
-  const { user } = useUser();
+  const { user } = useUserContext();
   const [message, setMessage] = useState("");
 
   const userId = user?._id;

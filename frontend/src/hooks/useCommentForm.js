@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { usePostActions } from "../features/posts/usePostActions";
-import { useUser } from "../features/user/useUser";
+import { useUserContext } from "../contexts/UserContext";
 import { usePostSocketListener } from "../sockets/hooks/usePostSocketListeners";
 import { handleNewComment } from "../sockets/handlers/postUpdateHandlers";
 
 export const useCommentForm = (postId) => {
   const [comment, setComment] = useState("");
-  const { user } = useUser();
+  const { user } = useUserContext();
   const { addComment } = usePostActions();
 
   usePostSocketListener(postId, handleNewComment, "commentAdded");

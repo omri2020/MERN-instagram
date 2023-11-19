@@ -1,14 +1,14 @@
-import { useUser } from "../features/user/useUser";
-import { useLogout } from "../features/auth/useLogout";
+import { useUserContext } from "../contexts/UserContext";
 import { useChat } from "../contexts/ChatContext";
+import { useLogout } from "../features/auth/useLogout";
 import NavItem from "../components/NavItem";
-import CreatePost from "./CreatePost";
+import CreatePostButton from "../features/posts/CreatePostButton";
 import Logo from "../components/Logo";
 import Menus from "../components/Menus";
 
 function NavMenu() {
   const { logoutUser } = useLogout();
-  const { user } = useUser();
+  const { user } = useUserContext();
   const { refetchChats } = useChat();
 
   return (
@@ -27,7 +27,7 @@ function NavMenu() {
           onClick={() => refetchChats()}
         />
         <NavItem src="heart-icon.png" text="Notifications" />
-        <CreatePost text="Create" />
+        <CreatePostButton text="Create" />
         <NavItem photo={user?.photo} text="Profile" to={`/${user?.username}`} />
       </div>
       <div className="relative">

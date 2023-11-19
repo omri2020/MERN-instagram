@@ -19,6 +19,7 @@ import ProfilePage from "./pages/ProfilePage";
 import { profileLoader } from "./features/user/Profile";
 import InboxPage from "./pages/InboxPage";
 import MessagesBox from "./features/chat/MessagesBox";
+import { UserProvider } from "./contexts/UserContext";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,13 +50,15 @@ const router = createBrowserRouter(
 function App() {
   return (
     <AuthProvider>
-      <ChatProvider>
-        <NotificationProvider>
-          <Modal>
-            <RouterProvider router={router} />
-          </Modal>
-        </NotificationProvider>
-      </ChatProvider>
+      <UserProvider>
+        <ChatProvider>
+          <NotificationProvider>
+            <Modal>
+              <RouterProvider router={router} />
+            </Modal>
+          </NotificationProvider>
+        </ChatProvider>
+      </UserProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </AuthProvider>
   );

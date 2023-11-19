@@ -1,13 +1,13 @@
-import { useUser } from "../features/user/useUser";
+import { useUserContext } from "../contexts/UserContext";
 import { useLogout } from "../features/auth/useLogout";
 import NavItem from "../components/NavItem";
-import CreatePost from "./CreatePost";
+import CreatePostButton from "../features/posts/CreatePostButton";
 import Menus from "../components/Menus";
 import IconLogo from "../components/IconLogo";
 
 function IconNavMenu() {
   const { logoutUser } = useLogout();
-  const { user } = useUser();
+  const { user } = useUserContext();
 
   return (
     <Menus>
@@ -23,7 +23,7 @@ function IconNavMenu() {
           hasNotifications={true}
         />
         <NavItem src="heart-icon.png" />
-        <CreatePost />
+        <CreatePostButton />
         <NavItem photo={user?.photo} to={`/${user?.username}`} />
       </div>
       <div className="relative">
